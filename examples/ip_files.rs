@@ -6,49 +6,6 @@ use std::time::Instant;
 
 const KEY_SIZE: usize = 13;
 
-fn read_in_trace(
-    trace_prefix: &str,
-    max_item_num: usize,
-) -> io::Result<(Vec<Vec<u8>>, HashMap<Vec<u8>, u32>)> {
-    let mut count = 0;
-    let mut keys = Vec::new();
-    let mut actual_flow_sizes = HashMap::new();
-
-    let datafile_cnt = 0;
-    //for datafile_cnt in 0..=10 {
-    let trace_file_path = format!("{}{}.dat", trace_prefix, datafile_cnt);
-    println!("Start reading {}", trace_file_path);
-
-    let file = File::open(&trace_file_path)?;
-    let mut reader = BufReader::new(file);
-    let mut temp = vec![0; KEY_SIZE];
-
-    while reader.read_exact(&mut temp).is_ok() {
-        let key = temp.clone();
-        keys.push(key.clone());
-        let counter = actual_flow_sizes.entry(key).or_insert(0);
-        *counter += 1;
-        count += 1;
-
-        if count >= max_item_num {
-            panic!(
-                "The dataset has more than {} items, set a larger value for max_item_num",
-                max_item_num
-            );
-        }
-    }
-
-    println!(
-        "Finished reading {} ({} items), the dataset now has {} items",
-        trace_file_path,
-        count,
-        keys.len()
-    );
-    //}
-
-    Ok((keys, actual_flow_sizes))
-}
-
 fn read_in_traces(
     trace_prefix: &str,
     max_item_num: usize,
