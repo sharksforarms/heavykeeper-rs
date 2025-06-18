@@ -6,6 +6,7 @@ use std::time::Instant;
 
 const KEY_SIZE: usize = 13;
 
+#[allow(clippy::type_complexity)]
 fn read_in_traces(
     trace_prefix: &str,
     max_item_num: usize,
